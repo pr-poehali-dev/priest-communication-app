@@ -93,6 +93,7 @@ const Index = () => {
   const [prayerSearch, setPrayerSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [favoritePrayers, setFavoritePrayers] = useState<number[]>([]);
+  const [showRequests, setShowRequests] = useState(false);
 
   const [messages] = useState<Message[]>([
     { id: 1, text: 'Здравствуйте! Как я могу вам помочь?', sender: 'priest', time: '10:30' },
@@ -576,6 +577,124 @@ const Index = () => {
                     </span>
                   </div>
                 </div>
+                
+                <div className="mb-3 flex gap-2">
+                  <Button 
+                    onClick={() => setShowRequests(!showRequests)}
+                    variant="outline"
+                    className="flex-1 gap-2"
+                  >
+                    <Icon name="Calendar" size={18} />
+                    Записаться на требы
+                  </Button>
+                </div>
+
+                {showRequests && (
+                  <div className="mb-4 p-4 bg-card rounded-lg border border-border space-y-3">
+                    <h4 className="font-serif text-lg font-semibold mb-3 flex items-center gap-2">
+                      <Icon name="FileText" className="text-accent" size={20} />
+                      Выберите требу
+                    </h4>
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button 
+                        variant="outline" 
+                        className="justify-start gap-2 h-auto py-3"
+                        onClick={() => {
+                          setMessageText('Хочу заказать молебен ');
+                          setShowRequests(false);
+                        }}
+                      >
+                        <Icon name="Flame" size={16} />
+                        <span className="text-sm">Молебен</span>
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        className="justify-start gap-2 h-auto py-3"
+                        onClick={() => {
+                          setMessageText('Хочу заказать панихиду ');
+                          setShowRequests(false);
+                        }}
+                      >
+                        <Icon name="Candle" size={16} />
+                        <span className="text-sm">Панихида</span>
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        className="justify-start gap-2 h-auto py-3"
+                        onClick={() => {
+                          setMessageText('Хочу заказать сорокоуст ');
+                          setShowRequests(false);
+                        }}
+                      >
+                        <Icon name="Scroll" size={16} />
+                        <span className="text-sm">Сорокоуст</span>
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        className="justify-start gap-2 h-auto py-3"
+                        onClick={() => {
+                          setMessageText('Хочу заказать водосвятный молебен ');
+                          setShowRequests(false);
+                        }}
+                      >
+                        <Icon name="Droplet" size={16} />
+                        <span className="text-sm">Водосвятие</span>
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        className="justify-start gap-2 h-auto py-3"
+                        onClick={() => {
+                          setMessageText('Хочу пригласить священника для освящения ');
+                          setShowRequests(false);
+                        }}
+                      >
+                        <Icon name="Home" size={16} />
+                        <span className="text-sm">Освящение</span>
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        className="justify-start gap-2 h-auto py-3"
+                        onClick={() => {
+                          setMessageText('Хочу записаться на таинство Крещения ');
+                          setShowRequests(false);
+                        }}
+                      >
+                        <Icon name="Cross" size={16} />
+                        <span className="text-sm">Крещение</span>
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        className="justify-start gap-2 h-auto py-3"
+                        onClick={() => {
+                          setMessageText('Хочу записаться на таинство Венчания ');
+                          setShowRequests(false);
+                        }}
+                      >
+                        <Icon name="Heart" size={16} />
+                        <span className="text-sm">Венчание</span>
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        className="justify-start gap-2 h-auto py-3"
+                        onClick={() => {
+                          setMessageText('Хочу записаться на таинство Соборования ');
+                          setShowRequests(false);
+                        }}
+                      >
+                        <Icon name="Droplets" size={16} />
+                        <span className="text-sm">Соборование</span>
+                      </Button>
+                    </div>
+                    <Button 
+                      variant="ghost" 
+                      className="w-full"
+                      onClick={() => setShowRequests(false)}
+                    >
+                      Отмена
+                    </Button>
+                  </div>
+                )}
+
                 <div className="flex gap-2">
                   <Input
                     placeholder="Введите сообщение..."
