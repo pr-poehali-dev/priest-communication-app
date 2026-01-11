@@ -517,14 +517,25 @@ const Index = () => {
           <TabsContent value="chat" className="animate-fade-in">
             <Card className="h-[600px] flex flex-col">
               <div className="p-4 border-b border-border bg-secondary">
-                <div className="flex items-center gap-3">
-                  <Avatar>
-                    <AvatarFallback className="bg-accent text-accent-foreground">О</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <h3 className="font-serif font-semibold text-lg">Отец Сергий</h3>
-                    <p className="text-sm text-muted-foreground">В сети</p>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Avatar>
+                      <AvatarFallback className="bg-accent text-accent-foreground">О</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <h3 className="font-serif font-semibold text-lg">Отец Сергий</h3>
+                      <p className="text-sm text-muted-foreground">В сети</p>
+                    </div>
                   </div>
+                  <a 
+                    href="https://t.me/hramiakimaianny" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent/90 text-accent-foreground rounded-lg transition-colors"
+                  >
+                    <Icon name="MessageCircle" size={18} />
+                    <span className="text-sm font-medium">Telegram</span>
+                  </a>
                 </div>
               </div>
               <ScrollArea className="flex-1 p-4">
@@ -549,6 +560,22 @@ const Index = () => {
                 </div>
               </ScrollArea>
               <div className="p-4 border-t border-border">
+                <div className="mb-3 p-3 bg-accent/10 rounded-lg border border-accent/20">
+                  <div className="flex items-center gap-2 text-sm">
+                    <Icon name="Info" className="text-accent" size={16} />
+                    <span className="text-muted-foreground">
+                      Чат синхронизирован с Telegram-каналом храма. Все сообщения отправляются в{' '}
+                      <a 
+                        href="https://t.me/hramiakimaianny" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-accent hover:underline font-medium"
+                      >
+                        @hramiakimaianny
+                      </a>
+                    </span>
+                  </div>
+                </div>
                 <div className="flex gap-2">
                   <Input
                     placeholder="Введите сообщение..."
