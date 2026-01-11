@@ -47,6 +47,26 @@ interface DonationOption {
   amounts: number[];
 }
 
+interface Scripture {
+  id: number;
+  date: string;
+  gospel: {
+    reference: string;
+    text: string;
+  };
+  apostle?: {
+    reference: string;
+    text: string;
+  };
+}
+
+interface PsalmReading {
+  id: number;
+  kathisma: number;
+  psalms: string;
+  text: string;
+}
+
 const Index = () => {
   const [activeTab, setActiveTab] = useState('chat');
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
@@ -56,6 +76,7 @@ const Index = () => {
   const [memorialName, setMemorialName] = useState('');
   const [memorialType, setMemorialType] = useState<'health' | 'repose'>('health');
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [selectedPsalm, setSelectedPsalm] = useState<number>(1);
 
   const [messages] = useState<Message[]>([
     { id: 1, text: 'Здравствуйте! Как я могу вам помочь?', sender: 'priest', time: '10:30' },
@@ -152,6 +173,52 @@ const Index = () => {
     }
   };
 
+  const [todayScripture] = useState<Scripture>({
+    id: 1,
+    date: '11 января 2026',
+    gospel: {
+      reference: 'От Луки 18:35-43',
+      text: 'Когда же подходил Он к Иерихону, один слепой сидел у дороги, прося милостыни, и, услышав, что мимо него проходит народ, спросил: что это такое? Ему сказали, что Иисус Назорей идет. Тогда он закричал: Иисус, Сын Давидов! помилуй меня. Шедшие впереди заграждали его, чтобы молчал; но он еще громче кричал: Сын Давидов! помилуй меня. Иисус, остановившись, велел привести его к Себе: и, когда тот подошел к Нему, спросил его: чего ты хочешь от Меня? Он сказал: Господи! чтобы мне прозреть. Иисус сказал ему: прозри! вера твоя спасла тебя. И он тотчас прозрел и пошел за Ним, славя Бога; и весь народ, видев это, воздал хвалу Богу.'
+    },
+    apostle: {
+      reference: 'К Ефесянам 5:8-19',
+      text: 'Вы были некогда тьма, а теперь — свет в Господе: поступайте, как чада света, потому что плод Духа состоит во всякой благости, праведности и истине. Испытывайте, что благоугодно Богу...'
+    }
+  });
+
+  const [psalmReadings] = useState<PsalmReading[]>([
+    {
+      id: 1,
+      kathisma: 1,
+      psalms: 'Псалом 1-8',
+      text: 'Блажен муж, иже не иде на совет нечестивых, и на пути грешных не ста, и на седалищи губителей не седе. Но в законе Господни воля его, и в законе Его поучится день и нощь...'
+    },
+    {
+      id: 2,
+      kathisma: 2,
+      psalms: 'Псалом 9-16',
+      text: 'Исповемся Тебе, Господи, всем сердцем моим, повем вся чудеса Твоя. Возвеселюся и возрадуюся о Тебе, пою имени Твоему, Вышний...'
+    },
+    {
+      id: 3,
+      kathisma: 3,
+      psalms: 'Псалом 17-23',
+      text: 'Возлюблю Тя, Господи, крепосте моя. Господь утверждение мое, и прибежище мое, и Избавитель мой...'
+    },
+    {
+      id: 4,
+      kathisma: 4,
+      psalms: 'Псалом 24-31',
+      text: 'К Тебе, Господи, воздвигох душу мою, Боже мой, на Тя уповах, да не постыжуся во век...'
+    },
+    {
+      id: 5,
+      kathisma: 5,
+      psalms: 'Псалом 32-36',
+      text: 'Радуйтеся, праведнии, о Господе, правым подобает похвала. Исповедайтеся Господеви в гуслех...'
+    },
+  ]);
+
   const handleSendMessage = () => {
     if (messageText.trim()) {
       setMessageText('');
@@ -180,7 +247,7 @@ const Index = () => {
 
       <main className="container mx-auto px-4 py-6 max-w-5xl">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-8 mb-6 h-auto p-1 bg-secondary">
+          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8 mb-6 h-auto p-1 bg-secondary">
             <TabsTrigger value="chat" className="flex flex-col gap-1 py-3">
               <Icon name="MessageCircle" size={20} />
               <span className="text-xs">Чат</span>
@@ -196,6 +263,10 @@ const Index = () => {
             <TabsTrigger value="prayers" className="flex flex-col gap-1 py-3">
               <Icon name="BookOpen" size={20} />
               <span className="text-xs">Молитвы</span>
+            </TabsTrigger>
+            <TabsTrigger value="scripture" className="flex flex-col gap-1 py-3">
+              <Icon name="BookMarked" size={20} />
+              <span className="text-xs">Евангелие</span>
             </TabsTrigger>
             <TabsTrigger value="livestream" className="flex flex-col gap-1 py-3">
               <Icon name="Video" size={20} />
@@ -589,6 +660,132 @@ const Index = () => {
                         </div>
                       </div>
                       <span className="font-semibold">18:00</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="scripture" className="animate-fade-in">
+            <div className="space-y-6">
+              <Card className="bg-gradient-to-br from-accent/5 to-accent/10 border-accent/20">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="font-serif text-2xl font-semibold flex items-center gap-2">
+                      <Icon name="BookMarked" className="text-accent" size={28} />
+                      Евангелие дня
+                    </h3>
+                    <Badge variant="outline" className="text-sm">{todayScripture.date}</Badge>
+                  </div>
+
+                  <div className="space-y-6">
+                    <div className="bg-card rounded-lg p-6 border border-accent/10">
+                      <div className="flex items-center gap-2 mb-4">
+                        <Icon name="Cross" className="text-accent" size={20} />
+                        <h4 className="font-serif text-xl font-semibold">
+                          {todayScripture.gospel.reference}
+                        </h4>
+                      </div>
+                      <p className="text-base leading-relaxed text-foreground">
+                        {todayScripture.gospel.text}
+                      </p>
+                    </div>
+
+                    {todayScripture.apostle && (
+                      <div className="bg-card rounded-lg p-6 border border-accent/10">
+                        <div className="flex items-center gap-2 mb-4">
+                          <Icon name="ScrollText" className="text-accent" size={20} />
+                          <h4 className="font-serif text-xl font-semibold">
+                            Апостол: {todayScripture.apostle.reference}
+                          </h4>
+                        </div>
+                        <p className="text-base leading-relaxed text-foreground">
+                          {todayScripture.apostle.text}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex gap-3 mt-6">
+                    <Button variant="outline" className="flex-1">
+                      <Icon name="Share2" size={18} className="mr-2" />
+                      Поделиться
+                    </Button>
+                    <Button variant="outline" className="flex-1">
+                      <Icon name="Volume2" size={18} className="mr-2" />
+                      Слушать
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-6">
+                  <h3 className="font-serif text-2xl font-semibold mb-6 flex items-center gap-2">
+                    <Icon name="Book" className="text-accent" size={24} />
+                    Чтение Псалтыри
+                  </h3>
+
+                  <div className="mb-6">
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Выберите кафизму для чтения:
+                    </p>
+                    <div className="grid grid-cols-5 gap-2">
+                      {psalmReadings.map((reading) => (
+                        <Button
+                          key={reading.id}
+                          variant={selectedPsalm === reading.kathisma ? 'default' : 'outline'}
+                          onClick={() => setSelectedPsalm(reading.kathisma)}
+                          className="h-auto py-3 flex flex-col gap-1"
+                        >
+                          <span className="text-xs opacity-70">Кафизма</span>
+                          <span className="text-lg font-serif font-semibold">{reading.kathisma}</span>
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {psalmReadings
+                    .filter((reading) => reading.kathisma === selectedPsalm)
+                    .map((reading) => (
+                      <div key={reading.id} className="space-y-4">
+                        <div className="bg-secondary rounded-lg p-5">
+                          <div className="flex items-center gap-2 mb-3">
+                            <Icon name="Book" className="text-accent" size={20} />
+                            <h4 className="font-serif text-lg font-semibold">
+                              Кафизма {reading.kathisma}
+                            </h4>
+                          </div>
+                          <p className="text-sm text-muted-foreground mb-4">{reading.psalms}</p>
+                          <p className="text-base leading-relaxed italic">
+                            {reading.text}
+                          </p>
+                        </div>
+
+                        <div className="flex gap-3">
+                          <Button variant="outline" className="flex-1">
+                            <Icon name="Volume2" size={18} className="mr-2" />
+                            Слушать аудио
+                          </Button>
+                          <Button variant="outline" className="flex-1">
+                            <Icon name="FileText" size={18} className="mr-2" />
+                            Полный текст
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+
+                  <div className="mt-6 p-4 bg-accent/10 rounded-lg border border-accent/20">
+                    <div className="flex items-start gap-3">
+                      <Icon name="Info" className="text-accent mt-1" size={20} />
+                      <div>
+                        <p className="font-medium mb-1">О чтении Псалтыри</p>
+                        <p className="text-sm text-muted-foreground">
+                          Псалтырь разделена на 20 кафизм для удобства ежедневного чтения. 
+                          Традиционно верующие прочитывают всю Псалтырь в течение седмицы.
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </CardContent>
