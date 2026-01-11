@@ -78,6 +78,8 @@ const Index = () => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [selectedPsalm, setSelectedPsalm] = useState<number>(1);
   const [isRecurring, setIsRecurring] = useState(false);
+  const [prayerSearch, setPrayerSearch] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
   const [messages] = useState<Message[]>([
     { id: 1, text: 'Здравствуйте! Как я могу вам помочь?', sender: 'priest', time: '10:30' },
@@ -528,8 +530,81 @@ const Index = () => {
                   <Icon name="BookOpen" className="text-accent" size={24} />
                   Молитвослов
                 </h3>
+                
+                <div className="mb-6 space-y-4">
+                  <div className="relative">
+                    <Icon name="Search" className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={20} />
+                    <Input
+                      placeholder="Поиск молитв..."
+                      value={prayerSearch}
+                      onChange={(e) => setPrayerSearch(e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
+                  
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      variant={selectedCategory === 'all' ? 'default' : 'outline'}
+                      onClick={() => setSelectedCategory('all')}
+                      size="sm"
+                    >
+                      Все молитвы
+                    </Button>
+                    <Button
+                      variant={selectedCategory === 'Утренние молитвы' ? 'default' : 'outline'}
+                      onClick={() => setSelectedCategory('Утренние молитвы')}
+                      size="sm"
+                    >
+                      Утренние
+                    </Button>
+                    <Button
+                      variant={selectedCategory === 'Вечерние молитвы' ? 'default' : 'outline'}
+                      onClick={() => setSelectedCategory('Вечерние молитвы')}
+                      size="sm"
+                    >
+                      Вечерние
+                    </Button>
+                    <Button
+                      variant={selectedCategory === 'Акафисты' ? 'default' : 'outline'}
+                      onClick={() => setSelectedCategory('Акафисты')}
+                      size="sm"
+                    >
+                      Акафисты
+                    </Button>
+                    <Button
+                      variant={selectedCategory === 'Молитвы иконам' ? 'default' : 'outline'}
+                      onClick={() => setSelectedCategory('Молитвы иконам')}
+                      size="sm"
+                    >
+                      Иконам
+                    </Button>
+                    <Button
+                      variant={selectedCategory === 'Молитвы о близких' ? 'default' : 'outline'}
+                      onClick={() => setSelectedCategory('Молитвы о близких')}
+                      size="sm"
+                    >
+                      О близких
+                    </Button>
+                    <Button
+                      variant={selectedCategory === 'Ко Причащению' ? 'default' : 'outline'}
+                      onClick={() => setSelectedCategory('Ко Причащению')}
+                      size="sm"
+                    >
+                      Ко Причащению
+                    </Button>
+                  </div>
+                </div>
+
                 <div className="space-y-4">
-                  {prayers.map((prayer) => (
+                  {prayers
+                    .filter(prayer => {
+                      const matchesSearch = prayer.title.toLowerCase().includes(prayerSearch.toLowerCase()) || 
+                                          prayer.text.toLowerCase().includes(prayerSearch.toLowerCase()) ||
+                                          prayer.category.toLowerCase().includes(prayerSearch.toLowerCase());
+                      const matchesCategory = selectedCategory === 'all' || prayer.category === selectedCategory;
+                      return matchesSearch && matchesCategory;
+                    })
+                    .map((prayer) => (
                     <Card key={prayer.id} className="bg-secondary border-accent/20">
                       <CardContent className="p-5">
                         <div className="flex items-start justify-between mb-3">
