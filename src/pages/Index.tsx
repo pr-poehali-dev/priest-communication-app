@@ -67,6 +67,18 @@ interface PsalmReading {
   text: string;
 }
 
+interface OrthodoxCalendarDay {
+  date: string;
+  saints: string[];
+  troparion: string;
+  kontakion: string;
+  fast: string;
+  wisdom: {
+    author: string;
+    text: string;
+  };
+}
+
 const Index = () => {
   const [activeTab, setActiveTab] = useState('chat');
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
@@ -646,36 +658,104 @@ const Index = () => {
                     />
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-serif text-lg font-semibold mb-3">Предстоящие события</h4>
-                    <div className="space-y-3">
-                      <div className="p-4 bg-secondary rounded-lg">
-                        <div className="flex items-start gap-3">
-                          <Icon name="Bell" className="text-accent mt-1" size={20} />
-                          <div>
-                            <p className="font-medium">Утренняя молитва</p>
-                            <p className="text-sm text-muted-foreground">Сегодня в 7:00</p>
+                    <ScrollArea className="h-[400px] pr-4">
+                      <div className="space-y-4">
+                        <div className="bg-gradient-to-br from-accent/10 to-accent/5 p-4 rounded-lg border border-accent/20">
+                          <div className="flex items-start gap-3 mb-3">
+                            <Icon name="Sparkles" className="text-accent mt-1" size={24} />
+                            <div>
+                              <h5 className="font-serif text-lg font-semibold">11 января</h5>
+                              <p className="text-sm text-muted-foreground">Суббота по Рождестве Христовом</p>
+                            </div>
+                          </div>
+                          
+                          <div className="space-y-3 mt-4">
+                            <div>
+                              <p className="text-xs font-semibold text-accent mb-1">СВЯТЫЕ ДНЯ:</p>
+                              <p className="text-sm">• Преподобномученика Маркелла, игумена обители «Неусыпающих»</p>
+                              <p className="text-sm">• Преподобного Феодосия Великого, общих житий начальника</p>
+                              <p className="text-sm">• 14 000 младенцев, от Ирода в Вифлееме избиенных</p>
+                            </div>
+                            
+                            <div className="border-t border-accent/20 pt-3">
+                              <p className="text-xs font-semibold text-accent mb-2">ТРОПАРЬ, ГЛАС 4:</p>
+                              <p className="text-sm italic leading-relaxed">
+                                «Собранная премудростию Божиею, Евангельскими законы наставльша, Маркелле преславне, отцев похвало, моли Христа Бога спастися душам нашим.»
+                              </p>
+                            </div>
+                            
+                            <div className="border-t border-accent/20 pt-3">
+                              <p className="text-xs font-semibold text-accent mb-2">КОНДАК, ГЛАС 2:</p>
+                              <p className="text-sm italic leading-relaxed">
+                                «Чистотою душевною Божественно вооружився, и непрестанныя молитвы яко копие вручив крепко, пробол еси бесовская ополчения, Маркелле отче наш, моли непрестанно о всех нас.»
+                              </p>
+                            </div>
+
+                            <div className="bg-card p-3 rounded-lg border border-border">
+                              <div className="flex items-start gap-2">
+                                <Icon name="Utensils" className="text-accent mt-0.5" size={16} />
+                                <div>
+                                  <p className="text-xs font-semibold mb-1">ПОСТ:</p>
+                                  <p className="text-sm">Поста нет. Рождественский пост окончен.</p>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="bg-gradient-to-br from-primary/5 to-primary/10 p-4 rounded-lg border-l-4 border-accent">
+                              <div className="flex items-start gap-3">
+                                <Icon name="Quote" className="text-accent mt-1" size={20} />
+                                <div>
+                                  <p className="text-xs font-semibold text-accent mb-2">СЛОВО СТАРЦЕВ:</p>
+                                  <p className="text-sm leading-relaxed italic mb-2">
+                                    «Где просто, там ангелов со сто, а где мудрено, там ни одного.»
+                                  </p>
+                                  <p className="text-xs text-muted-foreground">— Преподобный Амвросий Оптинский</p>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="bg-gradient-to-br from-primary/5 to-primary/10 p-4 rounded-lg border-l-4 border-accent">
+                              <div className="flex items-start gap-3">
+                                <Icon name="Quote" className="text-accent mt-1" size={20} />
+                                <div>
+                                  <p className="text-xs font-semibold text-accent mb-2">НАСТАВЛЕНИЕ:</p>
+                                  <p className="text-sm leading-relaxed italic mb-2">
+                                    «Молитва — это дыхание души. Без молитвы душа задыхается, как без воздуха задыхается тело.»
+                                  </p>
+                                  <p className="text-xs text-muted-foreground">— Архимандрит Иоанн (Крестьянкин)</p>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="bg-gradient-to-br from-primary/5 to-primary/10 p-4 rounded-lg border-l-4 border-accent">
+                              <div className="flex items-start gap-3">
+                                <Icon name="Quote" className="text-accent mt-1" size={20} />
+                                <div>
+                                  <p className="text-xs font-semibold text-accent mb-2">ДУХОВНОЕ СЛОВО:</p>
+                                  <p className="text-sm leading-relaxed italic mb-2">
+                                    «Благодать Божия все совершает: слепым дает прозрение, хромым хождение, глухим слышание, грешникам — покаяние, мытарям и блудницам — Царство Небесное.»
+                                  </p>
+                                  <p className="text-xs text-muted-foreground">— Святой праведный Иоанн Кронштадтский</p>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="bg-gradient-to-br from-primary/5 to-primary/10 p-4 rounded-lg border-l-4 border-accent">
+                              <div className="flex items-start gap-3">
+                                <Icon name="Quote" className="text-accent mt-1" size={20} />
+                                <div>
+                                  <p className="text-xs font-semibold text-accent mb-2">МУДРОСТЬ СТАРЦЕВ:</p>
+                                  <p className="text-sm leading-relaxed italic mb-2">
+                                    «Смирение — основание всех добродетелей. Без смирения никакая добродетель не может устоять.»
+                                  </p>
+                                  <p className="text-xs text-muted-foreground">— Схиигумен Василий (Тяпочкин)</p>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
-                      <div className="p-4 bg-secondary rounded-lg">
-                        <div className="flex items-start gap-3">
-                          <Icon name="Flame" className="text-accent mt-1" size={20} />
-                          <div>
-                            <p className="font-medium">Поминовение Николая</p>
-                            <p className="text-sm text-muted-foreground">20 января</p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="p-4 bg-secondary rounded-lg">
-                        <div className="flex items-start gap-3">
-                          <Icon name="Church" className="text-accent mt-1" size={20} />
-                          <div>
-                            <p className="font-medium">Крещение Господне</p>
-                            <p className="text-sm text-muted-foreground">19 января</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    </ScrollArea>
                   </div>
                 </div>
               </CardContent>
