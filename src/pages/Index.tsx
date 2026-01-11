@@ -30,8 +30,18 @@ interface Prayer {
   category: string;
 }
 
+interface Livestream {
+  id: number;
+  title: string;
+  status: 'live' | 'scheduled' | 'ended';
+  startTime: string;
+  viewers?: number;
+  thumbnail: string;
+}
+
 const Index = () => {
   const [activeTab, setActiveTab] = useState('chat');
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [messageText, setMessageText] = useState('');
   const [memorialName, setMemorialName] = useState('');
   const [memorialType, setMemorialType] = useState<'health' | 'repose'>('health');
@@ -70,6 +80,31 @@ const Index = () => {
     },
   ]);
 
+  const [livestreams] = useState<Livestream[]>([
+    {
+      id: 1,
+      title: 'Божественная литургия',
+      status: 'live',
+      startTime: '9:00',
+      viewers: 234,
+      thumbnail: '/placeholder.svg'
+    },
+    {
+      id: 2,
+      title: 'Вечерняя служба',
+      status: 'scheduled',
+      startTime: '18:00',
+      thumbnail: '/placeholder.svg'
+    },
+    {
+      id: 3,
+      title: 'Утренняя молитва',
+      status: 'scheduled',
+      startTime: 'Завтра в 7:00',
+      thumbnail: '/placeholder.svg'
+    },
+  ]);
+
   const handleSendMessage = () => {
     if (messageText.trim()) {
       setMessageText('');
@@ -98,7 +133,7 @@ const Index = () => {
 
       <main className="container mx-auto px-4 py-6 max-w-5xl">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-6 mb-6 h-auto p-1 bg-secondary">
+          <TabsList className="grid w-full grid-cols-7 mb-6 h-auto p-1 bg-secondary">
             <TabsTrigger value="chat" className="flex flex-col gap-1 py-3">
               <Icon name="MessageCircle" size={20} />
               <span className="text-xs">Чат</span>
@@ -114,6 +149,10 @@ const Index = () => {
             <TabsTrigger value="prayers" className="flex flex-col gap-1 py-3">
               <Icon name="BookOpen" size={20} />
               <span className="text-xs">Молитвы</span>
+            </TabsTrigger>
+            <TabsTrigger value="livestream" className="flex flex-col gap-1 py-3">
+              <Icon name="Video" size={20} />
+              <span className="text-xs">Трансляция</span>
             </TabsTrigger>
             <TabsTrigger value="history" className="flex flex-col gap-1 py-3">
               <Icon name="History" size={20} />
@@ -379,6 +418,131 @@ const Index = () => {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="livestream" className="animate-fade-in">
+            <div className="space-y-6">
+              <Card className="overflow-hidden">
+                <CardContent className="p-0">
+                  {isVideoPlaying ? (
+                    <div className="relative bg-black aspect-video">
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="text-center text-white">
+                          <Icon name="Video" size={64} className="mx-auto mb-4 opacity-50" />
+                          <p className="text-lg">Прямая трансляция литургии</p>
+                          <div className="flex items-center justify-center gap-2 mt-2">
+                            <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                            <span className="text-sm">В эфире • 234 зрителя</span>
+                          </div>
+                        </div>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        className="absolute top-4 right-4 text-white hover:bg-white/20"
+                        onClick={() => setIsVideoPlaying(false)}
+                      >
+                        <Icon name="X" size={24} />
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="p-6">
+                      <h3 className="font-serif text-2xl font-semibold mb-4 flex items-center gap-2">
+                        <Icon name="Video" className="text-accent" size={24} />
+                        Видеотрансляции богослужений
+                      </h3>
+                      <div className="grid gap-4 md:grid-cols-2">
+                        {livestreams.map((stream) => (
+                          <Card key={stream.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                            <div className="relative aspect-video bg-gradient-to-br from-primary/20 to-accent/20">
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <Icon name="Church" size={48} className="text-accent opacity-50" />
+                              </div>
+                              {stream.status === 'live' && (
+                                <Badge className="absolute top-3 left-3 bg-red-500 text-white">
+                                  <div className="w-2 h-2 bg-white rounded-full animate-pulse mr-2"></div>
+                                  В ЭФИРЕ
+                                </Badge>
+                              )}
+                              {stream.viewers && (
+                                <div className="absolute top-3 right-3 bg-black/60 text-white px-2 py-1 rounded text-xs flex items-center gap-1">
+                                  <Icon name="Eye" size={14} />
+                                  {stream.viewers}
+                                </div>
+                              )}
+                            </div>
+                            <CardContent className="p-4">
+                              <h4 className="font-serif text-lg font-semibold mb-2">{stream.title}</h4>
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                  <Icon name="Clock" size={16} />
+                                  <span>{stream.startTime}</span>
+                                </div>
+                                <Button
+                                  size="sm"
+                                  className="bg-accent hover:bg-accent/90"
+                                  onClick={() => stream.status === 'live' && setIsVideoPlaying(true)}
+                                  disabled={stream.status !== 'live'}
+                                >
+                                  {stream.status === 'live' ? (
+                                    <>
+                                      <Icon name="Play" size={16} className="mr-2" />
+                                      Смотреть
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Icon name="Bell" size={16} className="mr-2" />
+                                      Напомнить
+                                    </>
+                                  )}
+                                </Button>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-6">
+                  <h3 className="font-serif text-xl font-semibold mb-4">Расписание богослужений</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-4 bg-secondary rounded-lg">
+                      <div className="flex items-center gap-3">
+                        <Icon name="Sun" className="text-accent" size={24} />
+                        <div>
+                          <p className="font-medium">Утренняя служба</p>
+                          <p className="text-sm text-muted-foreground">Ежедневно</p>
+                        </div>
+                      </div>
+                      <span className="font-semibold">7:00</span>
+                    </div>
+                    <div className="flex items-center justify-between p-4 bg-secondary rounded-lg">
+                      <div className="flex items-center gap-3">
+                        <Icon name="Church" className="text-accent" size={24} />
+                        <div>
+                          <p className="font-medium">Божественная литургия</p>
+                          <p className="text-sm text-muted-foreground">Воскресенье и праздники</p>
+                        </div>
+                      </div>
+                      <span className="font-semibold">9:00</span>
+                    </div>
+                    <div className="flex items-center justify-between p-4 bg-secondary rounded-lg">
+                      <div className="flex items-center gap-3">
+                        <Icon name="Moon" className="text-accent" size={24} />
+                        <div>
+                          <p className="font-medium">Вечерняя служба</p>
+                          <p className="text-sm text-muted-foreground">Ежедневно</p>
+                        </div>
+                      </div>
+                      <span className="font-semibold">18:00</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
 
           <TabsContent value="profile" className="animate-fade-in">
