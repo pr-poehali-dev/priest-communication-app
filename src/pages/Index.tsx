@@ -80,6 +80,7 @@ const Index = () => {
   const [isRecurring, setIsRecurring] = useState(false);
   const [prayerSearch, setPrayerSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [favoritePrayers, setFavoritePrayers] = useState<number[]>([]);
 
   const [messages] = useState<Message[]>([
     { id: 1, text: 'Здравствуйте! Как я могу вам помочь?', sender: 'priest', time: '10:30' },
@@ -166,6 +167,60 @@ const Index = () => {
       text: 'Господи Иисусе Христе, Боже наш! Буди милость Твоя на воинах наших и на всех, защищающих Отечество наше. Сохрани их под кровом Твоим от всякого зла и сподоби их исполнити заповеди Твоя...',
       category: 'Молитвы о близких'
     },
+    {
+      id: 13,
+      title: 'Молитва перед началом всякого дела',
+      text: 'Царю Небесный, Утешителю, Душе истины, Иже везде сый и вся исполняяй, Сокровище благих и жизни Подателю, прииди и вселися в ны, и очисти ны от всякия скверны, и спаси, Блаже, души наша.',
+      category: 'На всякую потребу'
+    },
+    {
+      id: 14,
+      title: 'Молитва перед учением',
+      text: 'Преблагий Господи, низпосли нам благодать Духа Твоего Святаго, дарствующаго и укрепляющаго душевныя наши силы, дабы, внимающе преподаваемому нам учению, возросли мы Тебе, нашему Создателю, во славу...',
+      category: 'На всякую потребу'
+    },
+    {
+      id: 15,
+      title: 'Молитва после учения',
+      text: 'Благодарим Тебе, Создателю, яко сподобил еси нас благодати Твоея, во еже внимати учению. Благослови наших начальников, родителей и учителей, ведущих нас к познанию блага...',
+      category: 'На всякую потребу'
+    },
+    {
+      id: 16,
+      title: 'Молитва перед вкушением пищи',
+      text: 'Очи всех на Тя, Господи, уповают, и Ты даеши им пищу во благовремении, отверзаеши Ты щедрую руку Твою и исполняеши всякое животно благоволения.',
+      category: 'На всякую потребу'
+    },
+    {
+      id: 17,
+      title: 'Молитва после вкушения пищи',
+      text: 'Благодарим Тя, Христе Боже наш, яко насытил еси нас земных Твоих благ; не лиши нас и Небеснаго Твоего Царствия...',
+      category: 'На всякую потребу'
+    },
+    {
+      id: 18,
+      title: 'Молитва на благословение пути',
+      text: 'Господи Иисусе Христе, Боже наш, истинный и живый путю, сшествием Пречистыя Твоея Матере в Египет шествие предочистивый, и тамо пришествием Твоим вся люди просветивый и благословивый, благослови и мое ныне шествие...',
+      category: 'На всякую потребу'
+    },
+    {
+      id: 19,
+      title: 'Молитва об устроении дома',
+      text: 'Господи Иисусе Христе Боже наш, изволивый под сень Закхееву внити и спасение тому и всему дому того бывый, благослови и дом сей и вся живущия в нем...',
+      category: 'На всякую потребу'
+    },
+    {
+      id: 20,
+      title: 'Молитва о даровании детей',
+      text: 'Услыши нас, Милосердый и Всемогущий Боже, да молением нашим ниспослана будет благодать Твоя. Будь милостив, Господи, к молитве нашей, воспомяни закон Твой об умножении рода человеческаго...',
+      category: 'На всякую потребу'
+    },
+    {
+      id: 21,
+      title: 'Молитва о помощи в торговле и предприятиях',
+      text: 'Господи Иисусе Христе, Боже наш, благослови всякое дело рук моих и даруй ми благословение Твое на предприятие сие. Да будет воля Твоя святая во всем...',
+      category: 'На всякую потребу'
+    },
   ]);
 
   const [livestreams] = useState<Livestream[]>([
@@ -228,6 +283,14 @@ const Index = () => {
     if (donationAmount) {
       setDonationAmount('');
     }
+  };
+
+  const toggleFavorite = (prayerId: number) => {
+    setFavoritePrayers(prev => 
+      prev.includes(prayerId) 
+        ? prev.filter(id => id !== prayerId)
+        : [...prev, prayerId]
+    );
   };
 
   const [todayScripture] = useState<Scripture>({
@@ -592,6 +655,22 @@ const Index = () => {
                     >
                       Ко Причащению
                     </Button>
+                    <Button
+                      variant={selectedCategory === 'На всякую потребу' ? 'default' : 'outline'}
+                      onClick={() => setSelectedCategory('На всякую потребу')}
+                      size="sm"
+                    >
+                      На всякую потребу
+                    </Button>
+                    <Button
+                      variant={selectedCategory === 'favorites' ? 'default' : 'outline'}
+                      onClick={() => setSelectedCategory('favorites')}
+                      size="sm"
+                      className="gap-1"
+                    >
+                      <Icon name="Star" size={16} />
+                      Избранное ({favoritePrayers.length})
+                    </Button>
                   </div>
                 </div>
 
@@ -601,7 +680,9 @@ const Index = () => {
                       const matchesSearch = prayer.title.toLowerCase().includes(prayerSearch.toLowerCase()) || 
                                           prayer.text.toLowerCase().includes(prayerSearch.toLowerCase()) ||
                                           prayer.category.toLowerCase().includes(prayerSearch.toLowerCase());
-                      const matchesCategory = selectedCategory === 'all' || prayer.category === selectedCategory;
+                      const matchesCategory = selectedCategory === 'all' || 
+                                            prayer.category === selectedCategory ||
+                                            (selectedCategory === 'favorites' && favoritePrayers.includes(prayer.id));
                       return matchesSearch && matchesCategory;
                     })
                     .map((prayer) => (
@@ -615,9 +696,14 @@ const Index = () => {
                           {prayer.text}
                         </p>
                         <div className="flex gap-2 mt-4">
-                          <Button variant="outline" size="sm">
-                            <Icon name="Heart" size={16} className="mr-2" />
-                            В избранное
+                          <Button 
+                            variant={favoritePrayers.includes(prayer.id) ? 'default' : 'outline'} 
+                            size="sm"
+                            onClick={() => toggleFavorite(prayer.id)}
+                            className={favoritePrayers.includes(prayer.id) ? 'bg-accent hover:bg-accent/90' : ''}
+                          >
+                            <Icon name={favoritePrayers.includes(prayer.id) ? 'Star' : 'StarOff'} size={16} className="mr-2" />
+                            {favoritePrayers.includes(prayer.id) ? 'В избранном' : 'В избранное'}
                           </Button>
                           <Button variant="outline" size="sm">
                             <Icon name="Share2" size={16} className="mr-2" />
