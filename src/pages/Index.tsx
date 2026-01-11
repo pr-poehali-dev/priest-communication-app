@@ -77,6 +77,7 @@ const Index = () => {
   const [memorialType, setMemorialType] = useState<'health' | 'repose'>('health');
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [selectedPsalm, setSelectedPsalm] = useState<number>(1);
+  const [isRecurring, setIsRecurring] = useState(false);
 
   const [messages] = useState<Message[]>([
     { id: 1, text: 'Здравствуйте! Как я могу вам помочь?', sender: 'priest', time: '10:30' },
@@ -808,6 +809,23 @@ const Index = () => {
                   </div>
 
                   <div className="space-y-6">
+                    <div className="flex items-center justify-center gap-4 p-4 bg-secondary rounded-lg">
+                      <label className="text-sm font-medium cursor-pointer flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={isRecurring}
+                          onChange={(e) => setIsRecurring(e.target.checked)}
+                          className="w-5 h-5 rounded border-accent text-accent focus:ring-accent"
+                        />
+                        <span>Ежемесячное пожертвование</span>
+                      </label>
+                      {isRecurring && (
+                        <Badge variant="default" className="bg-accent">
+                          Каждый месяц
+                        </Badge>
+                      )}
+                    </div>
+
                     <div>
                       <label className="text-sm font-medium mb-3 block text-center">Выберите сумму</label>
                       <div className="grid grid-cols-3 gap-3">
@@ -873,15 +891,32 @@ const Index = () => {
                       className="w-full bg-accent hover:bg-accent/90 h-16 text-lg"
                     >
                       <Icon name="Heart" size={24} className="mr-3" />
-                      Пожертвовать {donationAmount ? `${donationAmount} ₽` : ''}
+                      {isRecurring ? 'Подписаться' : 'Пожертвовать'} {donationAmount ? `${donationAmount} ₽` : ''}
+                      {isRecurring && <span className="ml-2 text-sm opacity-90">/мес</span>}
                     </Button>
 
-                    <div className="pt-6 border-t border-border">
-                      <p className="text-sm text-muted-foreground text-center">
-                        Пожертвования принимаются добровольно и используются для поддержания храма,<br />
-                        проведения богослужений и благотворительных программ.
-                      </p>
-                    </div>
+                    {isRecurring && (
+                      <div className="p-4 bg-accent/10 rounded-lg border border-accent/20">
+                        <div className="flex items-start gap-3">
+                          <Icon name="Info" className="text-accent mt-1" size={20} />
+                          <div>
+                            <p className="font-medium text-sm mb-1">О регулярных пожертвованиях</p>
+                            <p className="text-xs text-muted-foreground">
+                              Средства будут списываться автоматически каждый месяц. Вы можете отменить подписку в любое время в разделе «История».
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {!isRecurring && (
+                      <div className="pt-6 border-t border-border">
+                        <p className="text-sm text-muted-foreground text-center">
+                          Пожертвования принимаются добровольно и используются для поддержания храма,<br />
+                          проведения богослужений и благотворительных программ.
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
