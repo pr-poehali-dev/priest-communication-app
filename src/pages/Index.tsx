@@ -600,89 +600,23 @@ const Index = () => {
                         variant="outline" 
                         className="justify-start gap-2 h-auto py-3"
                         onClick={() => {
-                          setMessageText('Хочу заказать молебен ');
-                          setShowRequests(false);
-                        }}
-                      >
-                        <Icon name="Flame" size={16} />
-                        <span className="text-sm">Молебен</span>
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        className="justify-start gap-2 h-auto py-3"
-                        onClick={() => {
-                          setMessageText('Хочу заказать панихиду ');
-                          setShowRequests(false);
-                        }}
-                      >
-                        <Icon name="Candle" size={16} />
-                        <span className="text-sm">Панихида</span>
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        className="justify-start gap-2 h-auto py-3"
-                        onClick={() => {
-                          setMessageText('Хочу заказать сорокоуст ');
-                          setShowRequests(false);
-                        }}
-                      >
-                        <Icon name="Scroll" size={16} />
-                        <span className="text-sm">Сорокоуст</span>
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        className="justify-start gap-2 h-auto py-3"
-                        onClick={() => {
-                          setMessageText('Хочу заказать водосвятный молебен ');
-                          setShowRequests(false);
-                        }}
-                      >
-                        <Icon name="Droplet" size={16} />
-                        <span className="text-sm">Водосвятие</span>
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        className="justify-start gap-2 h-auto py-3"
-                        onClick={() => {
-                          setMessageText('Хочу пригласить священника для освящения ');
-                          setShowRequests(false);
-                        }}
-                      >
-                        <Icon name="Home" size={16} />
-                        <span className="text-sm">Освящение</span>
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        className="justify-start gap-2 h-auto py-3"
-                        onClick={() => {
-                          setMessageText('Хочу записаться на таинство Крещения ');
-                          setShowRequests(false);
-                        }}
-                      >
-                        <Icon name="Cross" size={16} />
-                        <span className="text-sm">Крещение</span>
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        className="justify-start gap-2 h-auto py-3"
-                        onClick={() => {
-                          setMessageText('Хочу записаться на таинство Венчания ');
+                          setMessageText('Хочу подать поминовение о здравии ');
                           setShowRequests(false);
                         }}
                       >
                         <Icon name="Heart" size={16} />
-                        <span className="text-sm">Венчание</span>
+                        <span className="text-sm">О здравии</span>
                       </Button>
                       <Button 
                         variant="outline" 
                         className="justify-start gap-2 h-auto py-3"
                         onClick={() => {
-                          setMessageText('Хочу записаться на таинство Соборования ');
+                          setMessageText('Хочу подать поминовение об упокоении ');
                           setShowRequests(false);
                         }}
                       >
-                        <Icon name="Droplets" size={16} />
-                        <span className="text-sm">Соборование</span>
+                        <Icon name="Flame" size={16} />
+                        <span className="text-sm">Об упокоении</span>
                       </Button>
                     </div>
                     <Button 
