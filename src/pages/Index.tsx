@@ -39,9 +39,19 @@ interface Livestream {
   thumbnail: string;
 }
 
+interface DonationOption {
+  id: number;
+  title: string;
+  description: string;
+  icon: string;
+  amounts: number[];
+}
+
 const Index = () => {
   const [activeTab, setActiveTab] = useState('chat');
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [donationAmount, setDonationAmount] = useState<number | string>('');
+  const [selectedDonationType, setSelectedDonationType] = useState<number>(1);
   const [messageText, setMessageText] = useState('');
   const [memorialName, setMemorialName] = useState('');
   const [memorialType, setMemorialType] = useState<'health' | 'repose'>('health');
@@ -105,6 +115,43 @@ const Index = () => {
     },
   ]);
 
+  const [donationOptions] = useState<DonationOption[]>([
+    {
+      id: 1,
+      title: 'На храм',
+      description: 'Поддержка содержания и развития храма',
+      icon: 'Church',
+      amounts: [100, 500, 1000, 2000, 5000]
+    },
+    {
+      id: 2,
+      title: 'На свечи',
+      description: 'Пожертвование на храмовые свечи',
+      icon: 'Flame',
+      amounts: [50, 100, 200, 500]
+    },
+    {
+      id: 3,
+      title: 'На благотворительность',
+      description: 'Помощь нуждающимся и социальные программы',
+      icon: 'Heart',
+      amounts: [200, 500, 1000, 3000]
+    },
+    {
+      id: 4,
+      title: 'На иконы',
+      description: 'Поддержка иконописной мастерской',
+      icon: 'Image',
+      amounts: [500, 1000, 2000, 5000]
+    },
+  ]);
+
+  const handleDonation = () => {
+    if (donationAmount) {
+      setDonationAmount('');
+    }
+  };
+
   const handleSendMessage = () => {
     if (messageText.trim()) {
       setMessageText('');
@@ -133,7 +180,7 @@ const Index = () => {
 
       <main className="container mx-auto px-4 py-6 max-w-5xl">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-7 mb-6 h-auto p-1 bg-secondary">
+          <TabsList className="grid w-full grid-cols-8 mb-6 h-auto p-1 bg-secondary">
             <TabsTrigger value="chat" className="flex flex-col gap-1 py-3">
               <Icon name="MessageCircle" size={20} />
               <span className="text-xs">Чат</span>
@@ -153,6 +200,10 @@ const Index = () => {
             <TabsTrigger value="livestream" className="flex flex-col gap-1 py-3">
               <Icon name="Video" size={20} />
               <span className="text-xs">Трансляция</span>
+            </TabsTrigger>
+            <TabsTrigger value="donation" className="flex flex-col gap-1 py-3">
+              <Icon name="Heart" size={20} />
+              <span className="text-xs">Пожертвование</span>
             </TabsTrigger>
             <TabsTrigger value="history" className="flex flex-col gap-1 py-3">
               <Icon name="History" size={20} />
@@ -542,6 +593,166 @@ const Index = () => {
                   </div>
                 </CardContent>
               </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="donation" className="animate-fade-in">
+            <div className="grid gap-6 md:grid-cols-2">
+              <Card>
+                <CardContent className="p-6">
+                  <h3 className="font-serif text-2xl font-semibold mb-4 flex items-center gap-2">
+                    <Icon name="Heart" className="text-accent" size={24} />
+                    Поддержать храм
+                  </h3>
+                  <p className="text-muted-foreground mb-6">
+                    Ваше пожертвование помогает поддерживать храм, проводить богослужения и помогать нуждающимся.
+                  </p>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-sm font-medium mb-3 block">Выберите назначение</label>
+                      <div className="grid grid-cols-2 gap-3">
+                        {donationOptions.map((option) => (
+                          <Button
+                            key={option.id}
+                            variant={selectedDonationType === option.id ? 'default' : 'outline'}
+                            onClick={() => setSelectedDonationType(option.id)}
+                            className="h-auto py-4 flex flex-col items-start gap-2"
+                          >
+                            <Icon name={option.icon as any} size={20} className="text-accent" />
+                            <span className="text-sm font-medium">{option.title}</span>
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {donationOptions
+                      .filter((opt) => opt.id === selectedDonationType)
+                      .map((option) => (
+                        <div key={option.id} className="space-y-4">
+                          <div className="p-4 bg-secondary rounded-lg">
+                            <div className="flex items-start gap-3">
+                              <Icon name={option.icon as any} className="text-accent mt-1" size={20} />
+                              <div>
+                                <p className="font-medium">{option.title}</p>
+                                <p className="text-sm text-muted-foreground">{option.description}</p>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div>
+                            <label className="text-sm font-medium mb-2 block">Быстрый выбор суммы</label>
+                            <div className="grid grid-cols-3 gap-2">
+                              {option.amounts.map((amount) => (
+                                <Button
+                                  key={amount}
+                                  variant={donationAmount === amount ? 'default' : 'outline'}
+                                  onClick={() => setDonationAmount(amount)}
+                                  size="sm"
+                                >
+                                  {amount} ₽
+                                </Button>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div>
+                            <label className="text-sm font-medium mb-2 block">Или введите свою сумму</label>
+                            <Input
+                              type="number"
+                              placeholder="Введите сумму"
+                              value={donationAmount}
+                              onChange={(e) => setDonationAmount(e.target.value)}
+                            />
+                          </div>
+
+                          <Button
+                            onClick={handleDonation}
+                            disabled={!donationAmount}
+                            className="w-full bg-accent hover:bg-accent/90"
+                            size="lg"
+                          >
+                            <Icon name="Heart" size={20} className="mr-2" />
+                            Пожертвовать {donationAmount ? `${donationAmount} ₽` : ''}
+                          </Button>
+                        </div>
+                      ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <div className="space-y-6">
+                <Card>
+                  <CardContent className="p-6">
+                    <h3 className="font-serif text-xl font-semibold mb-4 flex items-center gap-2">
+                      <Icon name="Info" className="text-accent" size={20} />
+                      О пожертвованиях
+                    </h3>
+                    <div className="space-y-3 text-sm text-muted-foreground">
+                      <p>
+                        Пожертвования принимаются добровольно и используются для поддержания храма,
+                        проведения богослужений и благотворительных программ.
+                      </p>
+                      <p>
+                        Все средства расходуются прозрачно и с молитвой о благодетелях.
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardContent className="p-6">
+                    <h3 className="font-serif text-xl font-semibold mb-4">Куда идут средства</h3>
+                    <div className="space-y-3">
+                      <div className="flex items-start gap-3 p-3 bg-secondary rounded-lg">
+                        <Icon name="Church" className="text-accent mt-1" size={20} />
+                        <div className="flex-1">
+                          <p className="font-medium text-sm">Содержание храма</p>
+                          <p className="text-xs text-muted-foreground">Ремонт, коммунальные услуги</p>
+                        </div>
+                        <span className="text-sm font-semibold">40%</span>
+                      </div>
+                      <div className="flex items-start gap-3 p-3 bg-secondary rounded-lg">
+                        <Icon name="Heart" className="text-accent mt-1" size={20} />
+                        <div className="flex-1">
+                          <p className="font-medium text-sm">Благотворительность</p>
+                          <p className="text-xs text-muted-foreground">Помощь нуждающимся</p>
+                        </div>
+                        <span className="text-sm font-semibold">30%</span>
+                      </div>
+                      <div className="flex items-start gap-3 p-3 bg-secondary rounded-lg">
+                        <Icon name="BookOpen" className="text-accent mt-1" size={20} />
+                        <div className="flex-1">
+                          <p className="font-medium text-sm">Образование</p>
+                          <p className="text-xs text-muted-foreground">Воскресная школа, библиотека</p>
+                        </div>
+                        <span className="text-sm font-semibold">20%</span>
+                      </div>
+                      <div className="flex items-start gap-3 p-3 bg-secondary rounded-lg">
+                        <Icon name="Sparkles" className="text-accent mt-1" size={20} />
+                        <div className="flex-1">
+                          <p className="font-medium text-sm">Богослужения</p>
+                          <p className="text-xs text-muted-foreground">Утварь, облачения</p>
+                        </div>
+                        <span className="text-sm font-semibold">10%</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-gradient-to-br from-accent/10 to-accent/5 border-accent/20">
+                  <CardContent className="p-6">
+                    <div className="text-center">
+                      <Icon name="Sparkles" className="text-accent mx-auto mb-3" size={32} />
+                      <p className="font-serif text-lg font-semibold mb-2">
+                        Спаси Господи всех благодетелей!
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        О здравии жертвователей совершается молитва на каждой Божественной литургии
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           </TabsContent>
 
